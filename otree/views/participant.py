@@ -216,10 +216,14 @@ class JoinSessionAnonymously(vanilla.View):
         session = get_object_or_404(
             otree.models.Session, _anonymous_code=anonymous_code
         )
+        query_params=self.request.GET.dict()
         label = self.request.GET.get('participant_label')
         participant = participant_or_none_if_exceeded(session, label=label)
         if not participant:
             return no_participants_left_http_response()
+        participant.vars={**participant.vars, **query_params}
+        participant.save()
+        print(participant.vars, 'JOPA')
         return HttpResponseRedirect(participant._start_url())
 
 
