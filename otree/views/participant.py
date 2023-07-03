@@ -223,7 +223,6 @@ class JoinSessionAnonymously(vanilla.View):
             return no_participants_left_http_response()
         participant.vars={**participant.vars, **query_params}
         participant.save()
-        print(participant.vars, 'JOPA')
         return HttpResponseRedirect(participant._start_url())
 
 
