@@ -1,4 +1,5 @@
 import time
+from urllib.parse import urlencode
 
 import django.utils.timezone
 import vanilla
@@ -71,7 +72,10 @@ class InitializeParticipant(vanilla.UpdateView):
 
     def get(self, request, participant_code):
         participant = get_object_or_404(Participant, code=participant_code)
-
+        # PHILIPP: I introduce this to capture all url queries and save them as participant vars
+        # Theoretically it can be a security issue but not at this stage
+        participant.vars={**participant.vars, **self.request.GET.dict()}
+        participant.save()
         if participant._index_in_pages == 0:
             participant._index_in_pages = 1
             participant.visited = True
@@ -216,14 +220,19 @@ class JoinSessionAnonymously(vanilla.View):
         session = get_object_or_404(
             otree.models.Session, _anonymous_code=anonymous_code
         )
-        query_params=self.request.GET.dict()
+        # we capture here the url queries and pass them further to individual participant link
+        # that's actually a way better than it was done before
+        query_params=urlencode(self.request.GET.dict())
+
+        
         label = self.request.GET.get('participant_label')
         participant = participant_or_none_if_exceeded(session, label=label)
         if not participant:
             return no_participants_left_http_response()
-        participant.vars={**participant.vars, **query_params}
-        participant.save()
-        return HttpResponseRedirect(participant._start_url())
+        base_url=participant._start_url()
+        full_url = f"{base_url}?{query_params}"
+        
+        return HttpResponseRedirect(full_url)
 
 
 class AssignVisitorToRoom(GenericWaitPageMixin, vanilla.View):
