@@ -1,5 +1,6 @@
 `Homepage`_
-
+version 3.4.0.2: I did a slight modification of InitiateParticipant url so it correctly captures all 
+url queries.
 These are the core oTree libraries.
 
 Before you fork this project, keep in mind that otree is updated
