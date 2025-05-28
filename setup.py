@@ -16,11 +16,8 @@ MSG_PY_VERSION = """
 Error: This version of oTree requires Python 3.7 or higher.
 """
 
-if sys.version_info < (3, 7):
-    sys.exit(MSG_PY_VERSION)
-
-if sys.version_info >= (3, 9):
-    sys.exit('This version of oTree is not compatible with Python 3.9.')
+if sys.version_info < (3, 10):
+    sys.exit("Error: This version of oTree requires Python 3.10 or higher.")
 
 
 def clean_requirements(requirements_text):
