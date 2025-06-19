@@ -1,6 +1,6 @@
-channels==3.0.5
-asgiref==3.5.2
-daphne==3.0.2
+channels==2.4.0  
+asgiref==3.2.10  
+daphne==2.5.0 
 hypercorn==0.13.2
 colorama>=0.4.4
 dj-database-url>=0.5.0
